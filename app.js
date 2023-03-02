@@ -1,90 +1,86 @@
 const fs = require('fs');
-// const path = require('path');
-// const os = require('os');
-
-// console.log(__dirname);
-// console.log(__filename);
-// console.log(process.cwd());
-
-// console.log(os.cpus());
-// console.log(os.cpus().length);
-// console.log(os.arch());
-
-// fs.mkdir(path.join(__dirname, 'main'), (err) => {
-//     if (err) {
-//         throw new Error(err.message);
+const path = require('path');
+//-----
+// fs.mkdir(path.join('boys'), (err)=>{
+//     if (err) throw new Error();
+// })
+// fs.mkdir(path.join('girl'), (err)=>{
+//     if (err) throw new Error();
+// })
+//-----
+// fs.writeFile(path.join('boys', 'Dima.json'), '{name:Dima, age:29, gender:male}', (err)=>{
+//     if(err) throw new Error();
+// })
+// fs.writeFile(path.join('boys', 'Roma.json'), '{name:Roma, age:29, gender:male}', (err)=>{
+//     if(err) throw new Error();
+// })
+// fs.writeFile(path.join('boys', 'Anna.json'), '{name:Anna, age:27, gender:female}', (err)=>{
+//     if(err) throw new Error();
+// })
+//-----
+// fs.writeFile(path.join('girl', 'Kola.json'), '{name:Kola, age:5, gender:male}', (err)=>{
+//     if(err) throw new Error();
+// })
+// fs.writeFile(path.join('girl', 'Ola.json'), '{name:Ola, age:27, gender:female}', (err)=>{
+//     if(err) throw new Error();
+// })
+// fs.writeFile(path.join('girl', 'Marina.json'), '{name:Marina, age:27, gender:female}', (err)=>{
+//     if(err) throw new Error();
+// })
+//-----
+// fs.readdir('./boys',(err, files)=>{
+//     console.log(files);
+//
+//     for (const fileName of files){
+//         fs.stat(`./boys/${fileName}`,(err, stats)=>{
+//             console.log(`./boys/${fileName}`);
+//             console.log(stats.isDirectory());
+//
+//             if (stats.isFile()){
+//                 fs.readFile(`./boys/${fileName}`,(err, data)=>{
+//                     console.log(data.toString());
+//                 })
+//             }
+//         })
 //     }
-// });
-
-// fs.writeFile(path.join(__dirname, 'main', 'file.js'), 'message from me', (err) => {
-//     if (err) {
-//         throw  new Error(err.message);
+// })
+//
+// fs.rename(path.join('boys', 'Anna.json'), path.join('girl', 'Anna.json'), (err) => {
+//     if (err) throw new Error(err.message)
+// })
+//-----
+// fs.readdir('./girl',(err, files)=>{
+//     console.log(files);
+//
+//     for (const fileName of files){
+//         fs.stat(`./girl/${fileName}`,(err, stats)=>{
+//             console.log(`./girl/${fileName}`);
+//             console.log(stats.isDirectory());
+//
+//             if (stats.isFile()){
+//                 fs.readFile(`./girl/${fileName}`,(err, data)=>{
+//                     console.log(data.toString());
+//                 })
+//             }
+//         })
 //     }
-// });
+// })
+//
+// fs.rename(path.join('girl', 'Kola.json'), path.join('boys', 'Kola.json'), (err) => {
+//     if (err) throw new Error(err.message)
+// })
+//-----
 
-// fs.appendFile(path.join(__dirname, 'main', 'file.txt'), '\nI am from Ukraine!', err => {
-//     if (err) {
-//         throw new Error(err.message);
-//     }
-// });
+// fs.unlink(path.join('./boys', 'Dima.json'), (err)=>{
+//     if(err) throw new Error();
+// })
+// fs.unlink(path.join('./girl', 'Ola.json'), (err)=>{
+//     if(err) throw new Error();
+// })
 
-// fs.truncate(path.join(__dirname, 'main', 'file.js'), err => {
-//     if (err) {
-//         throw new Error(err.message);
-//     }
-// });
-
-// fs.mkdir(path.join(__dirname, 'main', 'users'), err => {
-//     if (err) {
-//         throw new Error(err.message);
-//     }
-// });
-
-const users = [
-    {
-        name: 'Anton',
-        age: 25,
-        status: true
-    },
-    {
-        name: 'Oleg',
-        age: 56,
-        status: false
-    },
-    {
-        name: 'Ira',
-        age: 17,
-        status: true
-    },
-    {
-        name: 'Olga',
-        age: 32,
-        status: false
-    }
-];
-
-const array = ['Lina', 'Kamila', 'Ostap'];
-
-// fs.rmdir(path.join(__dirname, 'main', 'users', 'user.name'), err => {
-//     if (err) {
-//         throw new Error(err.message);
-//     }
-// });
-
-// users.forEach(user => fs.writeFile(
-//     path.join(__dirname, 'main', 'usersFromArray', `${user.name}.js`),
-//     `const user = {name: ${user.name}, age: ${user.age}, status: ${user.status}}`,
-//     err => {
-//         if (err) {
-//             throw new Error(err.message);
-//         }
-//     }));
-
-// users.forEach(user => fs.rename(
-//     path.join(__dirname, 'main', 'users', `${user.name}.txt`), path.join(__dirname, 'main', 'usersFromArray', `${user.name}.js`), err => {
-//         if (err) {
-//             console.log(err);
-//         }
-//     }));
-
-const {jsFunc} = require('./main/file');
+// // fs.rmdir('./boys',{recursive:true},(err)=>{
+// //     console.log(err);
+// // })
+// fs.rmdir('./girl',{recursive:true},(err)=>{
+//     console.log(err);
+// })
