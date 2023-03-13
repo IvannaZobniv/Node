@@ -3,6 +3,7 @@ import { isObjectIdOrHexString } from "mongoose";
 
 import { ApiError } from "../errors/api.error";
 import { User } from "../models/User.model";
+import { IRequest } from "../types/common.types";
 import { UserValidator } from "../validators/user.validator";
 
 class UserMiddleware {
@@ -23,7 +24,33 @@ class UserMiddleware {
       next(e);
     }
   }
-  public async isUserIdValid(
+  public getDynamicallyAndThrow(
+    fieldName: string,
+    from = "body",
+    dbField = fieldName
+  ) {
+    return async (req: IRequest, res: Response, next: NextFunction) => {
+      try {
+        const fieldValue = req[from][fieldName];
+
+        const user = await User.findOne({ [dbField]: fieldValue });
+
+        if (user) {
+          throw new ApiError(
+            `User with ${fieldName} ${fieldValue} already exist`,
+            409
+          );
+        }
+
+        next();
+      } catch (e) {
+        next(e);
+      }
+    };
+  }
+  // Validators
+
+  public async isIdValid(
     req: Request,
     res: Response,
     next: NextFunction
@@ -37,7 +64,7 @@ class UserMiddleware {
       next(e);
     }
   }
-  public async isUserIdValidCreate(
+  public async isIdValidCreate(
     req: Request,
     res: Response,
     next: NextFunction
@@ -53,12 +80,13 @@ class UserMiddleware {
       next(e);
     }
   }
-  public async isUserIdValidUpdate(
+  public async isIdValidUpdate(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
+      // @ts-ignore
       const { error, value } = UserValidator.updateUser.validate(req.body);
       if (error) {
         throw next(new ApiError(error.message, 400));
