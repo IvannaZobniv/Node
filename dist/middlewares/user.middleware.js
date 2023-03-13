@@ -20,7 +20,22 @@ class UserMiddleware {
             next(e);
         }
     }
-    async isUserIdValid(req, res, next) {
+    getDynamicallyAndThrow(fieldName, from = "body", dbField = fieldName) {
+        return async (req, res, next) => {
+            try {
+                const fieldValue = req[from][fieldName];
+                const user = await User_model_1.User.findOne({ [dbField]: fieldValue });
+                if (user) {
+                    throw new api_error_1.ApiError(`User with ${fieldName} ${fieldValue} already exist`, 409);
+                }
+                next();
+            }
+            catch (e) {
+                next(e);
+            }
+        };
+    }
+    async isIdValid(req, res, next) {
         try {
             if (!(0, mongoose_1.isObjectIdOrHexString)(req.params.userId)) {
                 throw new api_error_1.ApiError("ID not valid", 400);
@@ -31,7 +46,7 @@ class UserMiddleware {
             next(e);
         }
     }
-    async isUserIdValidCreate(req, res, next) {
+    async isIdValidCreate(req, res, next) {
         try {
             const { error, value } = user_validator_1.UserValidator.createUser.validate(req.body);
             if (error) {
@@ -44,7 +59,7 @@ class UserMiddleware {
             next(e);
         }
     }
-    async isUserIdValidUpdate(req, res, next) {
+    async isIdValidUpdate(req, res, next) {
         try {
             const { error, value } = user_validator_1.UserValidator.updateUser.validate(req.body);
             if (error) {
