@@ -35,6 +35,22 @@ class UserMiddleware {
             }
         };
     }
+    getDynamicallyOrThrow(fieldName, from = "body", dbField = fieldName) {
+        return async (req, res, next) => {
+            try {
+                const fieldValue = req[from][fieldName];
+                const user = await User_model_1.User.findOne({ [dbField]: fieldValue });
+                if (!user) {
+                    throw new api_error_1.ApiError(`User not found`, 422);
+                }
+                req.res.locals = user;
+                next();
+            }
+            catch (e) {
+                next(e);
+            }
+        };
+    }
     async isIdValid(req, res, next) {
         try {
             if (!(0, mongoose_1.isObjectIdOrHexString)(req.params.userId)) {
@@ -50,7 +66,7 @@ class UserMiddleware {
         try {
             const { error, value } = user_validator_1.UserValidator.createUser.validate(req.body);
             if (error) {
-                throw next(new api_error_1.ApiError(error.message, 400));
+                throw new api_error_1.ApiError(error.message, 400);
             }
             req.body = value;
             next();
@@ -63,9 +79,21 @@ class UserMiddleware {
         try {
             const { error, value } = user_validator_1.UserValidator.updateUser.validate(req.body);
             if (error) {
-                throw next(new api_error_1.ApiError(error.message, 400));
+                throw new api_error_1.ApiError(error.message, 400);
             }
             req.body = value;
+            next();
+        }
+        catch (e) {
+            next(e);
+        }
+    }
+    async isIdValidLogin(req, res, next) {
+        try {
+            const { error } = user_validator_1.UserValidator.loginUser.validate(req.body);
+            if (error) {
+                throw new api_error_1.ApiError(error.message, 400);
+            }
             next();
         }
         catch (e) {
