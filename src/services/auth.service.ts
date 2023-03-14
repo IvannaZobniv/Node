@@ -3,6 +3,7 @@ import { Token, User } from "../models";
 import { ICredentials, ITokenPair, ITokenPayload, IUser } from "../types";
 import { passwordService } from "./password.service";
 import { tokenService } from "./token.service";
+import {emailService} from "./email.service";
 
 class AuthService {
   public async register(body: IUser): Promise<void> {
@@ -13,6 +14,7 @@ class AuthService {
         ...body,
         password: hashedPassword,
       });
+      await emailService.sendMail("ivannazobniv930@gmail.com")
     } catch (e) {
       throw new ApiError(e.message, e.status);
     }
