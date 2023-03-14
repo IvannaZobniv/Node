@@ -1,8 +1,8 @@
-export enum EEmailActions {
-  WELCOME,
-  FORGOT_PASSWORD,
-}
-export const allTemplates = {
+import { EEmailActions } from "../enums/email.enum";
+
+export const allTemplates: {
+  [key: string]: { subject: string; templateName: string };
+} = {
   [EEmailActions.WELCOME]: {
     subject: "Раді бачити вас у нашому додатку!",
     templateName: "register",
