@@ -18,6 +18,12 @@ router.post(
   userMiddleware.getDynamicallyOrThrow("email"),
   authController.login
 );
+router.post(
+  "/password/change",
+  userMiddleware.isValidChangePassword,
+  authMiddleware.checkAccessToken,
+  authController.changePassword
+);
 
 router.post(
   "/refresh",

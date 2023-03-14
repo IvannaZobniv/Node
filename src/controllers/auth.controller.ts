@@ -46,6 +46,36 @@ class AuthController {
       next(e);
     }
   }
+  // public async changePassword(
+  //   req: Request,
+  //   res: Response,
+  //   next: NextFunction
+  // ): Promise<Response<ITokenPair>> {
+  //   try {
+  //     const { tokenInfo, jwtPayload } = req.res.locals;
+  //
+  //     const tokenPair = await authService.refresh(tokenInfo, jwtPayload);
+  //
+  //     return res.status(200).json(tokenPair);
+  //   } catch (e) {
+  //     next(e);
+  //   }
+  // }
+  public async changePassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { tokenInfo } = req.res.locals;
+      const { oldPassword, newPassword } = req.body;
+      await authService.changePassword(
+        tokenInfo._user_id,
+        oldPassword,
+        newPassword
+      );
+
+      res.sendStatus(200);
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 
 export const authController = new AuthController();
