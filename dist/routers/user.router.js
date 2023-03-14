@@ -2,12 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userRouter = void 0;
 const express_1 = require("express");
-const user_controller_1 = require("../controllers/user.controller");
-const user_middleware_1 = require("../middlewares/user.middleware");
+const controllers_1 = require("../controllers");
+const middlewares_1 = require("../middlewares");
 const router = (0, express_1.Router)();
-router.get("/", user_controller_1.userController.getAll);
-router.post("/", user_middleware_1.userMiddleware.isIdValidCreate, user_controller_1.userController.create);
-router.get("/:userId", user_middleware_1.userMiddleware.isIdValid, user_middleware_1.userMiddleware.getByIdOrThrow, user_controller_1.userController.getById);
-router.put("/:userId", user_middleware_1.userMiddleware.isIdValid, user_middleware_1.userMiddleware.isIdValidUpdate, user_middleware_1.userMiddleware.getByIdOrThrow, user_controller_1.userController.update);
-router.delete("/:userId", user_middleware_1.userMiddleware.isIdValid, user_middleware_1.userMiddleware.getByIdOrThrow, user_controller_1.userController.delete);
+router.get("/", controllers_1.userController.getAll);
+router.get("/:userId", middlewares_1.authMiddleware.checkAccessToken, middlewares_1.userMiddleware.isIdValid, middlewares_1.userMiddleware.getByIdOrThrow, controllers_1.userController.getById);
+router.put("/:userId", middlewares_1.authMiddleware.checkAccessToken, middlewares_1.userMiddleware.isIdValid, middlewares_1.userMiddleware.isValidUpdate, middlewares_1.userMiddleware.getByIdOrThrow, controllers_1.userController.update);
+router.delete("/:userId", middlewares_1.authMiddleware.checkAccessToken, middlewares_1.userMiddleware.isIdValid, middlewares_1.userMiddleware.getByIdOrThrow, controllers_1.userController.delete);
 exports.userRouter = router;

@@ -1,9 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 
-import { User } from "../models/User.model";
-import { userService } from "../services/user.service";
-import { ICommonResponse } from "../types/common.types";
-import { IUser } from "../types/user.types";
+import { User } from "../models";
+import { userService } from "../services";
+import { ICommonResponse, IUser } from "../types";
 
 class UserController {
   public async getAll(
@@ -13,6 +12,7 @@ class UserController {
   ): Promise<Response<IUser[]>> {
     try {
       const users = await userService.getAll();
+
       return res.json(users);
     } catch (e) {
       next(e);
@@ -57,7 +57,7 @@ class UserController {
   ): Promise<Response<IUser>> {
     try {
       const { userId } = req.params;
-      // const user = req.body;
+
       const updatedUser = await User.findByIdAndUpdate(
         userId,
         { ...req.body },
@@ -69,6 +69,7 @@ class UserController {
       next(e);
     }
   }
+
   public async delete(
     req: Request,
     res: Response,
@@ -79,10 +80,11 @@ class UserController {
 
       await User.deleteOne({ _id: userId });
 
-      return res.status(204);
+      return res.sendStatus(204);
     } catch (e) {
       next(e);
     }
   }
 }
+
 export const userController = new UserController();

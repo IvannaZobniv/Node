@@ -2,31 +2,31 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userMiddleware = void 0;
 const mongoose_1 = require("mongoose");
-const api_error_1 = require("../errors/api.error");
-const User_model_1 = require("../models/User.model");
-const user_validator_1 = require("../validators/user.validator");
+const errors_1 = require("../errors");
+const models_1 = require("../models");
+const validators_1 = require("../validators");
 class UserMiddleware {
     async getByIdOrThrow(req, res, next) {
         try {
             const { userId } = req.params;
-            const user = await User_model_1.User.findById(userId);
+            const user = await models_1.User.findById(userId);
             if (!user) {
-                throw new api_error_1.ApiError("User not found", 422);
+                throw new errors_1.ApiError("User not found", 422);
             }
-            res.locals.user = user;
+            res.locals = { user };
             next();
         }
         catch (e) {
             next(e);
         }
     }
-    getDynamicallyAndThrow(fieldName, from = "body", dbField = fieldName) {
+    getDynamicallyAndThrow(fieldName, from = "body", dbField = "email") {
         return async (req, res, next) => {
             try {
                 const fieldValue = req[from][fieldName];
-                const user = await User_model_1.User.findOne({ [dbField]: fieldValue });
+                const user = await models_1.User.findOne({ [dbField]: fieldValue });
                 if (user) {
-                    throw new api_error_1.ApiError(`User with ${fieldName} ${fieldValue} already exist`, 409);
+                    throw new errors_1.ApiError(`User with ${fieldName} ${fieldValue} already exist`, 409);
                 }
                 next();
             }
@@ -35,15 +35,15 @@ class UserMiddleware {
             }
         };
     }
-    getDynamicallyOrThrow(fieldName, from = "body", dbField = fieldName) {
+    getDynamicallyOrThrow(fieldName, from = "body", dbField = "email") {
         return async (req, res, next) => {
             try {
                 const fieldValue = req[from][fieldName];
-                const user = await User_model_1.User.findOne({ [dbField]: fieldValue });
+                const user = await models_1.User.findOne({ [dbField]: fieldValue });
                 if (!user) {
-                    throw new api_error_1.ApiError(`User not found`, 422);
+                    throw new errors_1.ApiError(`User not found`, 422);
                 }
-                req.res.locals = user;
+                req.res.locals = { user };
                 next();
             }
             catch (e) {
@@ -54,7 +54,7 @@ class UserMiddleware {
     async isIdValid(req, res, next) {
         try {
             if (!(0, mongoose_1.isObjectIdOrHexString)(req.params.userId)) {
-                throw new api_error_1.ApiError("ID not valid", 400);
+                throw new errors_1.ApiError("ID not valid", 400);
             }
             next();
         }
@@ -62,24 +62,11 @@ class UserMiddleware {
             next(e);
         }
     }
-    async isIdValidCreate(req, res, next) {
+    async isValidCreate(req, res, next) {
         try {
-            const { error, value } = user_validator_1.UserValidator.createUser.validate(req.body);
+            const { error, value } = validators_1.UserValidator.createUser.validate(req.body);
             if (error) {
-                throw new api_error_1.ApiError(error.message, 400);
-            }
-            req.body = value;
-            next();
-        }
-        catch (e) {
-            next(e);
-        }
-    }
-    async isIdValidUpdate(req, res, next) {
-        try {
-            const { error, value } = user_validator_1.UserValidator.updateUser.validate(req.body);
-            if (error) {
-                throw new api_error_1.ApiError(error.message, 400);
+                throw new errors_1.ApiError(error.message, 400);
             }
             req.body = value;
             next();
@@ -88,11 +75,24 @@ class UserMiddleware {
             next(e);
         }
     }
-    async isIdValidLogin(req, res, next) {
+    async isValidUpdate(req, res, next) {
         try {
-            const { error } = user_validator_1.UserValidator.loginUser.validate(req.body);
+            const { error, value } = validators_1.UserValidator.updateUser.validate(req.body);
             if (error) {
-                throw new api_error_1.ApiError(error.message, 400);
+                throw new errors_1.ApiError(error.message, 400);
+            }
+            req.body = value;
+            next();
+        }
+        catch (e) {
+            next(e);
+        }
+    }
+    async isValidLogin(req, res, next) {
+        try {
+            const { error } = validators_1.UserValidator.loginUser.validate(req.body);
+            if (error) {
+                throw new errors_1.ApiError(error.message, 400);
             }
             next();
         }
