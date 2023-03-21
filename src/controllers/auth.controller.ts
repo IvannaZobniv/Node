@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 import { authService } from "../services";
-import {ITokenPair, ITokenPayload} from "../types";
+import { ITokenPair, ITokenPayload } from "../types";
 
 class AuthController {
   public async register(req: Request, res: Response, next: NextFunction) {
@@ -99,7 +99,11 @@ class AuthController {
       const { password } = req.body;
       const { tokenInfo } = req.res.locals;
 
-      await authService.setForgotPassword(password, tokenInfo._user_id);
+      await authService.setForgotPassword(
+        password,
+        tokenInfo._user_id,
+        req.params.token
+      );
 
       res.sendStatus(200);
     } catch (e) {
