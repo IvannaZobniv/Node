@@ -34,7 +34,7 @@ class EmailService {
     });
   }
   public async sendMail(
-    email: string,
+    email: string | string[],
     emailAction: EEmailActions,
     locals: Record<string, string> = {}
   ) {
@@ -53,7 +53,7 @@ class EmailService {
         html,
       });
     } catch (e) {
-      console.log(e.message);
+      console.error(e.message);
     }
   }
 }
