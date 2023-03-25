@@ -11,6 +11,7 @@ const routers_1 = require("./routers");
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
+app.use("/cars", routers_1.carRouter);
 app.use("/users", routers_1.userRouter);
 app.use("/auth", routers_1.authRouter);
 app.use((err, req, res, next) => {
