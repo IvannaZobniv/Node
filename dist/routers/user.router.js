@@ -10,4 +10,6 @@ router.get("/", controllers_1.userController.getAll);
 router.get("/:userId", middlewares_1.authMiddleware.checkAccessToken, middlewares_1.commonMiddleware.isIdValid("userId"), middlewares_1.userMiddleware.getByIdOrThrow, controllers_1.userController.getById);
 router.put("/:userId", middlewares_1.authMiddleware.checkAccessToken, middlewares_1.commonMiddleware.isIdValid("userId"), middlewares_1.commonMiddleware.isBodyValid(validators_1.UserValidator.updateUser), middlewares_1.userMiddleware.getByIdOrThrow, controllers_1.userController.update);
 router.delete("/:userId", middlewares_1.authMiddleware.checkAccessToken, middlewares_1.commonMiddleware.isIdValid("userId"), middlewares_1.userMiddleware.getByIdOrThrow, controllers_1.userController.delete);
+router.put("/:userId/avatar", middlewares_1.authMiddleware.checkAccessToken, middlewares_1.commonMiddleware.isIdValid("userId"), middlewares_1.fileMiddleware.isAvatarValid, middlewares_1.userMiddleware.getByIdOrThrow, controllers_1.userController.uploadAvatar);
+router.delete("/:userId/avatar", middlewares_1.authMiddleware.checkAccessToken, middlewares_1.commonMiddleware.isIdValid("userId"), middlewares_1.userMiddleware.getByIdOrThrow, controllers_1.userController.deleteAvatar);
 exports.userRouter = router;
