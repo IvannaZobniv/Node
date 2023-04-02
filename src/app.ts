@@ -9,7 +9,7 @@ import { configs } from "./configs";
 import { cronRunner } from "./crons";
 import { ApiError } from "./errors";
 import { authRouter, carRouter, userRouter } from "./routers";
-import * as swaggerJson from "./utils/swagger.json";
+import * as swaggerJson from "./src/utils/swagger.json";
 const app: Application = express();
 const server = http.createServer(app);
 
@@ -24,14 +24,14 @@ io.on("connection", async (socket: Socket) => {
   sockets.forEach((socket2) => {
     console.log(socket2.id);
   });
-
-  /** SEND TO PARTICULAR CLIENT */
-  socket.emit("message", { message: "hello" });
-  /** SEND MESSAGE TO ALL CLIENTS */
-  io.emit("user:connected", { message: "USER CONNECTED" });
-  /** SEND MESSAGE TO ALL CLIENTS EXCEPT SENDER */
-  socket.broadcast.emit("user:connected", { message: "USER CONNECTED" });
-
+  // // ----------------------------
+  // /** SEND TO PARTICULAR CLIENT */
+  // socket.emit("message", { message: "hello" });
+  // /** SEND MESSAGE TO ALL CLIENTS */
+  // io.emit("user:connected", { message: "USER CONNECTED" });
+  // /** SEND MESSAGE TO ALL CLIENTS EXCEPT SENDER */
+  // socket.broadcast.emit("user:connected", { message: "USER CONNECTED" });
+  // // ----------------------------
   socket.on("message:send", (text) => {
     io.emit("message:get", `${text}`);
   });
