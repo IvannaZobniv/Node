@@ -9,7 +9,7 @@ import { configs } from "./configs";
 import { cronRunner } from "./crons";
 import { ApiError } from "./errors";
 import { authRouter, carRouter, userRouter } from "./routers";
-import * as swaggerJson from "./src/utils/swagger.json";
+import * as swaggerJson from "./utils/swagger.json";
 const app: Application = express();
 const server = http.createServer(app);
 
@@ -20,10 +20,10 @@ const io = new Server(server, {
 });
 
 io.on("connection", async (socket: Socket) => {
-  const sockets = await io.fetchSockets();
-  sockets.forEach((socket2) => {
-    console.log(socket2.id);
-  });
+  // const sockets = await io.fetchSockets();
+  // sockets.forEach((socket2) => {
+  //   console.log(socket2.id);
+  // });
   // // ----------------------------
   // /** SEND TO PARTICULAR CLIENT */
   // socket.emit("message", { message: "hello" });
@@ -35,17 +35,19 @@ io.on("connection", async (socket: Socket) => {
   socket.on("message:send", (text) => {
     io.emit("message:get", `${text}`);
   });
+
   socket.on("join:room", ({ roomId }) => {
     socket.join(roomId);
-  });
-  socket
-    .to(roomId)
-    .emit("user:joiner", { socketId: socket.id, action: "Joiner!" });
-  socket.on("left:room", ({ roomId }) => {
-    socket.leave(roomId);
+
     socket
       .to(roomId)
-      .emit("user:left", { socketId: socket.id, action: "Left!" });
+      .emit("user:joiner", { socketId: socket.id, action: "Joiner!" });
+    socket.on("left:room", ({ roomId }) => {
+      socket.leave(roomId);
+      socket
+        .to(roomId)
+        .emit("user:left", { socketId: socket.id, action: "Left!" });
+    });
   });
 });
 

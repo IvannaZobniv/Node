@@ -34,12 +34,11 @@
         socket.email("message:send",text);
     }
     const joinRoom = document.createElement(".join");
-    const leaveRoom = document.createElement(".leave");
-
     joinRoom.onclick =()=>{
         socket.email("join:room",{roomId:1})
     };
 
+    const leaveRoom = document.createElement(".leave");
     leaveRoom.onclick =()=>{
         socket.email("left:room",{roomId:1})
     };
